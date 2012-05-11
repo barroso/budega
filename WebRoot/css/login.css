@@ -1,0 +1,21 @@
+body { margin: 0; padding: 0; background-color: #FFF !important; }
+
+form {background-color: #000!important;}
+label.error { float: none; color: red; padding-left: 3px;  }
+
+#geral { 
+	padding-top: 400px;
+	width: 100%;
+	height: 100%; 
+}
+
+#login { height: 400px; width: 100%;}
+#login form .clearfix > label { color: #fff; font-size: 13pt !important; }
+
+#budega {
+	background: url("../imagens/budega.gif");
+	height: 30px;
+	width: 100%;
+}
+
+#erro { margin: -10px 0 5px 60px; height: 25px; color: white; }

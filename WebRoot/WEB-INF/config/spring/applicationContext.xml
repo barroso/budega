@@ -1,0 +1,51 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+						http://www.springframework.org/schema/context 
+						http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+						http://www.springframework.org/schema/tx 
+						http://www.springframework.org/schema/tx/spring-tx-3.0.xsd 
+						http://www.springframework.org/schema/aop 
+						http://www.springframework.org/schema/aop/spring-aop-3.0.xsd" 
+	default-autowire="byName">
+	
+	<context:annotation-config />
+	<context:component-scan base-package="br.com.barroso" />
+
+	<!-- habilita suporte as anotações transacionais -->
+	<tx:annotation-driven order="1" />
+
+    <context:property-placeholder location="classpath:configuracoes.properties" />
+	
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="org.postgresql.Driver"/>
+		<property name="username" value="postgres"/>
+		<property name="password" value="root"/>
+		<property name="url" value="jdbc:postgresql://localhost:5432/budega"/>
+	</bean>
+
+	<!-- Configuração do Aspecto das transações. -->
+	
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="configLocation" value="classpath:hibernate.cfg.xml" />
+		<property name="packagesToScan" value="br.com.barroso" />
+	</bean>
+	
+	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<tx:advice id="txAdviceBudega" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="*" propagation="REQUIRED" />
+		</tx:attributes>
+	</tx:advice>
+
+	<aop:config>
+		<aop:pointcut id="budegaDaoMethods" expression="execution(* br.com.barroso..*.*(..))" />
+		<aop:advisor advice-ref="txAdviceBudega" pointcut-ref="budegaDaoMethods" />
+	</aop:config>
+</beans>
