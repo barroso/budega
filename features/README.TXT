@@ -1,7 +1,7 @@
 # SETUP
 
  - Se nao tiver ruby, Instalar ruby
- - Eh sempre bom um: gem update --system
+ - Eh sempre bom um gem update --system
  - Se nao existir o comando bundle, gem install bundler
  - Entrar no diretorio features/
  - bundle install

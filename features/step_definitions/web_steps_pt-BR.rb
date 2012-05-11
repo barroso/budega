@@ -44,16 +44,21 @@ Dado /^que exista o setor "([^"]*)"$/ do |nome_setor|
    end
 end
 
+Quando /^eu clico em "Entrar"?$/ do
+    find('#logar').click
+end
+
+def get_field field
+  label = all(:xpath, "//label[contains(text(), '#{field}')]").select{|e| e.text.match("^\s*#{field}\:?")}.first
+  field = label[:for] unless label.nil?
+  field
+end
 
 
 
 
 Quando /^eu acesso "([^"]*)"$/ do |path|
-  page.execute_script("window.location = 'http://localhost/cucumber'")
-end
-
-Quando /^eu clico em "Entrar"?$/ do
-    find('#logar').click
+  page.execute_script("window.location = 'http://localhost/budega'")
 end
 
 Quando /^eu clico em excluir "([^"]*)"$/ do |text|
@@ -86,11 +91,6 @@ Quando /^eu clico no botão com o texto "([^"]*)"$/ do |label|
   find(:xpath, "//button/descendant::*[contains(text(), '#{label}')]").click
 end
 
-def get_field_input field
-  label = (all(:xpath, "//input[contains(class(), 'despesa moeda')]"))[0]
-  field = label[:for] unless label.nil?
-  field
-end
 
 Quando /^eu clico no ícone com o título "([^"]*)"$/ do |titulo|
   find(:xpath, "//a[@title='#{titulo}']").click
@@ -324,8 +324,8 @@ Dado /^que todos os papeis estejam permitidos$/ do
    exec_sql "update parametrosdosistema set modulos = encode(cast(array_to_string(array(select id from papel order by id), ',') as bytea), 'base64');"
 end
 
-def get_field field
-  label = all(:xpath, "//label[contains(text(), '#{field}')]").select{|e| e.text.match("^\s*#{field}\:?")}.first
+def get_field_input field
+  label = (all(:xpath, "//input[contains(class(), 'despesa moeda')]"))[0]
   field = label[:for] unless label.nil?
   field
 end
